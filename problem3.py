@@ -14,16 +14,20 @@ def get_page_source(url):
 def extract_news_headlines(html_source):
     headlines = []
     soup = BeautifulSoup(html_source)
+    # first find the enclosing divs of the headlines
     divs = soup.findAll("div", "row db-list")
     for div in divs:
+        # inside each div, drill down the <a> element which contains the headline text
         articles = div.findAll("article", "post")
         for article in articles:
             header = article.find("h2")
             link = header.find("a")
+            # add headline text to list
             headlines.append(link.getText())
     return headlines
 
 def main():
+    # retrieve the source and pass it through to the extraction function
     html_source = get_page_source("http://dailybruin.com/category/news/")
     headlines = extract_news_headlines(html_source)
     for headline in headlines:
