@@ -10,7 +10,7 @@ def get_page_source(url):
     f.close()
     return source
 
-# use BeautifulSoup to extract headline urls from the raw html 
+# use BeautifulSoup to extract headline text and url from the raw html 
 def extract_news_headline_urls(html_source):
     headline_urls = []
     soup = BeautifulSoup(html_source)
@@ -23,7 +23,7 @@ def extract_news_headline_urls(html_source):
             header = article.find("h2")
             link = header.find("a")
             # add headline text to list
-            headline_urls.append(link["href"])
+            headline_urls.append((link.getText(), link["href"]))
     return headline_urls
 
 # count the paragraphs of the news story
@@ -37,11 +37,11 @@ def main():
     base_url = "http://dailybruin.com"
     # retrieve the source and pass it through to the extraction function
     html_source = get_page_source("http://dailybruin.com/category/news/")
-    headline_urls = extract_news_headline_urls(html_source)
-    for headline_url in headline_urls:
+    headlines = extract_news_headline_urls(html_source)
+    for (headline_text, headline_url) in headlines:
         story_html_source = get_page_source(base_url + headline_url)
         paragraph_count = count_paragraphs(story_html_source)
-        print paragraph_count
+        print "%s: %d" % (headline_text, paragraph_count)
 
 if __name__ == '__main__':
     main()
