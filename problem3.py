@@ -10,5 +10,18 @@ def get_page_source(url):
     f.close()
     return source
 
+# use BeautifulSoup to extract headlines from the raw html 
+def extract_news_headlines(html_source):
+    headlines = []
+    soup = BeautifulSoup(html_source)
+    divs = soup.findAll("div", "row db-list")
+    for div in divs:
+        articles = div.findAll("article", "post")
+        for article in articles:
+            header = article.find("h2")
+            link = header.find("a")
+            headlines.append(link.getText())
+    return headlines
+
 if __name__ == '__main__':
     main()
