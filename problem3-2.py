@@ -26,5 +26,22 @@ def extract_news_headline_urls(html_source):
             headline_urls.append(link["href"])
     return headline_urls
 
+# count the paragraphs of the news story
+def count_paragraphs(html_source):
+    soup = BeautifulSoup(html_source)
+    # the paragraph elements of interest are located under the div.db-post-content element
+    story_div = soup.find("div", "db-post-content")
+    return len(story_div.findAll("p"))
+
+def main():
+    base_url = "http://dailybruin.com"
+    # retrieve the source and pass it through to the extraction function
+    html_source = get_page_source("http://dailybruin.com/category/news/")
+    headline_urls = extract_news_headline_urls(html_source)
+    for headline_url in headline_urls:
+        story_html_source = get_page_source(base_url + headline_url)
+        paragraph_count = count_paragraphs(story_html_source)
+        print paragraph_count
+
 if __name__ == '__main__':
     main()
