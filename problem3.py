@@ -23,5 +23,11 @@ def extract_news_headlines(html_source):
             headlines.append(link.getText())
     return headlines
 
+def main():
+    html_source = get_page_source("http://dailybruin.com/category/news/")
+    headlines = extract_news_headlines(html_source)
+    for headline in headlines:
+        print headline
+
 if __name__ == '__main__':
     main()
